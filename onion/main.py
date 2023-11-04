@@ -2,6 +2,16 @@ from playwright.sync_api import sync_playwright
 import requests, re, os, base64
 import logging
 
+import configparser
+
+# 读取配置文件
+config = configparser.ConfigParser()
+config.read("key.ini")
+
+# 获取密码
+password = config["Credentials"]["password"]
+account = config["Credentials"]["account"]
+
 # 配置日志记录
 logging.basicConfig(
     filename="yangcong.log",
@@ -95,8 +105,8 @@ with sync_playwright() as p:
 
     page.route(re.compile(r".*(getHlsEncryptKey|\.m3u8|\.vtt).*"), handle)
     page.goto("https://school.yangcongxueyuan.com/", wait_until="networkidle")
-    page.get_by_placeholder("手机号/用户名").fill("15316310863")
-    page.locator("#password").fill("liuchang17")
+    page.get_by_placeholder("手机号/用户名").fill(account)
+    page.locator("#password").fill(password)
     page.get_by_role("button", name="登录", exact=True).click()
     page.wait_for_timeout(2000)
 

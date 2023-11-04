@@ -8,3 +8,5 @@
 .vscode
 # 追踪文件
 **/trace.zip
+# 密码文件
+**/key.ini
