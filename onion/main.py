@@ -21,10 +21,10 @@ logging.basicConfig(
 key_url = ""
 m3u8_url = ""
 vtt_url = ""
+trace_switch = False
 download_list = [
-    ("高中", "英语", "人教版"),
-    ("高中", "生物", "人教版"),
-    ("小学", "语文", "通用版"),
+    ("初中", "数学", "人教版"),
+    ("高中", "数学", "人教版"),
 ]
 full_name_list = ["洋葱"]
 
@@ -47,10 +47,11 @@ def delete_quotes(str):
 
 
 with sync_playwright() as p:
-    browser = p.chromium.launch(channel="chrome", headless=False, slow_mo=1000)
+    browser = p.chromium.launch(channel="chrome", headless=True, slow_mo=1000)
     context = browser.new_context()
     # 配置追踪开始
-    # context.tracing.start(screenshots=True, snapshots=True, sources=True)
+    if trace_switch:
+        context.tracing.start(screenshots=True, snapshots=True, sources=True)
     page = context.new_page()
 
     def get_option_ui(num):
@@ -209,6 +210,7 @@ with sync_playwright() as p:
                 full_name_list.pop()
             full_name_list.pop()
         full_name_list.pop()
-    # context.tracing.stop(path="trace.zip") # 结束追踪的地方，添加 tracing 的结束配置。
+    if trace_switch:
+        context.tracing.stop(path="trace.zip")  # 结束追踪的地方，添加 tracing 的结束配置。
     context.close()
     browser.close()
